@@ -1,0 +1,483 @@
+﻿<Window x:Class="AnotherEdit.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="AnotherEdit"
+        AllowDrop="True"
+        xmlns:ap="clr-namespace:AnotherEdit"
+        FontFamily="Courier New"
+        FontSize="10"
+        FontWeight="Bold"
+        Foreground="Black" mc:Ignorable="d" VerticalContentAlignment="Top" Name="mainWindow" MinHeight="700" MaxHeight="2160" Background="{x:Null}" BorderThickness="1" Loaded="mainWindow_Loaded" MinWidth="620" MaxWidth="3840" d:DesignHeight="750" d:DesignWidth="1062" SizeToContent="WidthAndHeight"  Closing="mainWindow_Closing" WindowStyle="ThreeDBorderWindow">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type RadioButton}" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <BulletDecorator Background="Transparent">
+                            <BulletDecorator.Bullet>
+                                <StackPanel Orientation="Horizontal" >
+                                    <Grid  MinWidth="31" MinHeight="21">
+
+
+                                        <Rectangle Name="MainRec" Width="Auto" Height="Auto" RadiusX="3" RadiusY="3">
+                                            <Rectangle.Fill>
+                                                <LinearGradientBrush EndPoint="0.5,1.0" StartPoint="0.3,0">
+                                                    <GradientStop Color="#FFC8C8C8" Offset="0"/>
+                                                    <GradientStop Color="#FFF7F7F7" Offset="0.5"/>
+                                                    <GradientStop Color="DarkGray" Offset="0.991"/>
+                                                </LinearGradientBrush>
+                                            </Rectangle.Fill>
+
+                                        </Rectangle>
+
+                                        <Rectangle Margin="1,1,1,1"    Width="Auto" Height="Auto">
+                                            <Rectangle.Fill>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Color="#FFC0C0C0" Offset="0"/>
+                                                    <GradientStop Color="#FFF7F7F7" Offset="0.991"/>
+                                                </LinearGradientBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <Rectangle x:Name="Selected" Margin="1,1,1,1"     Width="Auto" Height="Auto" RadiusX="2" RadiusY="2" >
+                                            <Rectangle.Fill>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Color="DeepSkyBlue" Offset="0"/>
+                                                    <GradientStop Color="LightGray" Offset="0.9"/>
+
+                                                </LinearGradientBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <ContentPresenter  Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Grid>
+
+
+                                </StackPanel>
+                            </BulletDecorator.Bullet>
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" 
+                                 Value="true">
+                                <Setter TargetName="MainRec" Property="Fill" 
+                                    Value="LightBlue"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="false">
+                                <Setter TargetName="Selected" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid>
+        <Grid Name="MainGrid" MinWidth="550" MinHeight="650" Background="#FFF1EDED" AllowDrop="False" MouseLeftButtonUp="MainGrid_MouseLeftButtonUp" MouseRightButtonUp="MainGrid_MouseRightButtonUp" PreviewMouseLeftButtonUp="MainGrid_PreviewMouseLeftButtonUp" Width="Auto">
+            <TextBox Name="txtFind" Height="21" Margin="148,0,200,51"  VerticalAlignment="Bottom" AllowDrop="False" 
+                 FontSize="12"  FontWeight="Normal" IsEnabled="True" Text="" 
+                 ToolTip="Find from current Page to End of file ..." Foreground="Magenta" FontFamily="Courier New" BorderBrush="{x:Null}" />
+
+            <Button Name="btnReplaceInSelection" Width="63"  Height="21"   Margin="46,0,0,29"
+                HorizontalAlignment="Left"  VerticalAlignment="Bottom"  HorizontalContentAlignment="Center"
+                AllowDrop="False" Click="btnReplace_Click" Content="Replace" DataContext="{Binding}"
+                Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue"
+                IsEnabled="True" ToolTip="Replace ALL..." BorderBrush="{x:Null}" />
+
+            <TextBox Name="txtReplace" Height="21"  Margin="148,0,45,29"
+                 VerticalAlignment="Bottom"  AllowDrop="False"
+                 FontSize="12" FontWeight="Normal"
+                 IsEnabled="True" Text=""
+                 ToolTip="Replace from current Page to End of file ..." FontFamily="Courier New" Width="Auto" BorderBrush="{x:Null}" />
+
+            <Menu Name="menuTop"
+              Height="22"
+              Margin="44,4,0,0"
+              VerticalAlignment="Top"
+              FontFamily="Courier New"
+              FontSize="12"
+              Visibility="Visible" Foreground="DarkBlue" BorderBrush="DarkGray" Width="265" HorizontalAlignment="Left" Background="{x:Null}">
+                <MenuItem Name="menuFile" Header="File"  FontFamily="Courier New" FontSize="12" BorderBrush="{x:Null}" Height="22" Width="54" VerticalContentAlignment="Center" VerticalAlignment="Center" FontWeight="Normal">
+                    <MenuItem.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                            <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                        </LinearGradientBrush>
+                    </MenuItem.Background>
+                    <MenuItem Header="Open As" Name="menuOpen" Click="menuOpenAs_Click" Height="22" />
+                    <MenuItem Header="Save As" Name="menuSaveAs" Click="menuSaveAs_Click" Height="22"/>
+                    <MenuItem Header="─────────────" IsEnabled="False" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" FontWeight="Bold" Height="22"/>
+                    <MenuItem Header="Exit" Name="menuExit" Click="menuExit_Click" Height="22"/>
+                </MenuItem>
+                <MenuItem Name="menuEdit" Header="Edit" FontFamily="Courier New" FontSize="12" BorderBrush="{x:Null}" Height="22" Width="70"  VerticalAlignment="Center" VerticalContentAlignment="Center" FontWeight="Normal">
+                    <MenuItem.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                            <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                        </LinearGradientBrush>
+                    </MenuItem.Background>
+                    <MenuItem Header="Redo" Name="menuRedo" Height="22" IsEnabled="False" />
+                    <MenuItem Header="Undo" Name="menuUndo" Height="22" IsEnabled="False" />
+                    <MenuItem Header="─────────────" IsEnabled="False" Height="22" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" FontWeight="Bold"/>
+                </MenuItem>
+                <MenuItem Name="menuRun" Header="Run" FontFamily="Courier New" FontSize="12" BorderBrush="{x:Null}" Height="22" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="70" FontWeight="Normal">
+                    <MenuItem.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                            <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                        </LinearGradientBrush>
+                    </MenuItem.Background>
+                    <MenuItem Header="Run ALL" Height="22" Click="btnRunAll_Click"/>
+                    <MenuItem Header="Run Selected ALL" Click="btnRunSelected_Click" />
+                    <MenuItem Header="─────────────" IsEnabled="False" Height="22" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" FontWeight="Bold"/>
+                    <MenuItem Header="Run Current Clause (; ... ;)" Click="btnRunCurrent_Click" Height="22" />
+                    <MenuItem Header="Run Current Clause (Selected only ...)" Click="btnRunCurrentSelected_Click" Height="22" />
+
+                </MenuItem>
+                <MenuItem Name="menuHelp" Header="Help"  FontFamily="Courier New" FontSize="12" BorderBrush="{x:Null}" Height="22" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="70" FontWeight="Normal">
+                    <MenuItem.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                            <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                        </LinearGradientBrush>
+                    </MenuItem.Background>
+                    <MenuItem Header="Help" Name="menuHelpItems" Click="menuHelpItems_Click" Height="22"/>
+                    <MenuItem Header="About" Name="menuAbout" Click="menuAbout_Click" Height="22" />
+                    <MenuItem Header="─────────────" IsEnabled="False" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" FontWeight="Bold" Height="22"/>
+                    <MenuItem Header="Donate" Name="menuDonate" Click="menuDonate_Click" Height="22"/>
+                </MenuItem>
+
+            </Menu>
+
+            <ComboBox Name="comboFontSize" Height="22"
+                  Margin="0,30,47,0" VerticalAlignment="Top"
+                  VerticalContentAlignment="Center"
+                  
+                  BorderBrush="{x:Null}"
+                  FontSize="12"
+                  FontWeight="Normal"
+                  IsEditable="True"
+                  SelectionChanged="comboFontSize_SelectionChanged"
+                  ToolTip="Font Size" Foreground="DarkBlue" Text="10" FontFamily="Courier New" ForceCursor="False" AllowDrop="False" IsReadOnly="True" BorderThickness="0" IsEnabled="True" FlowDirection="LeftToRight" HorizontalAlignment="Right" Width="41" MouseEnter="comboFontSize_MouseEnter" MouseLeave="comboFontSize_MouseLeave">
+                <ComboBoxItem Content="10" IsSelected="True" />
+                <ComboBoxItem Content="11" />
+                <ComboBoxItem Content="12" />
+                <ComboBoxItem Content="13" IsSelected="False" />
+                <ComboBoxItem Content="14" />
+                <ComboBoxItem Content="15" />
+                <ComboBoxItem Content="16" />
+                <ComboBoxItem Content="17" />
+                <ComboBoxItem Content="18" />
+                <ComboBoxItem Content="19" />
+                <ComboBoxItem Content="20" />
+                <ComboBoxItem Content="22" />
+                <ComboBoxItem Content="24" />
+                <ComboBoxItem Content="26" />
+
+                <ComboBox.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                        <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                    </LinearGradientBrush>
+                </ComboBox.Background>
+
+
+            </ComboBox>
+            <ComboBox 
+                  BorderBrush="{x:Null}" FontFamily="Courier New" FontSize="12" 
+                  FontWeight="Normal" ForceCursor="False" Foreground="DarkBlue" Height="22" IsEditable="True" Margin="0,4,48,0" Name="comboFontFamily" Text="Font Name"  
+                  ToolTip="Font Size" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" SelectionChanged="comboFontFamily_SelectionChanged" 
+                  IsEnabled="True" AllowDrop="False" BorderThickness="1" IsReadOnly="True" FlowDirection="LeftToRight" Focusable="False" SelectedIndex="0" Width="246" HorizontalAlignment="Right">
+
+                <ComboBox.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                        <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                    </LinearGradientBrush>
+                </ComboBox.Background>
+
+                <!--<ComboBox.ItemTemplate>
+                <DataTemplate>                    ItemsSource="{x:Static Fonts.SystemFontFamilies}" 
+                    <StackPanel x:Name="spForFont">
+                        <TextBlock Text="{Binding}" FontFamily="{Binding}"/>
+                    </StackPanel>
+
+                </DataTemplate>
+            </ComboBox.ItemTemplate>-->
+
+
+            </ComboBox>
+
+            <Grid Name="gridButtonLeft" Width="44" HorizontalAlignment="Left" Margin="-1,0,0,0" Height="680" VerticalAlignment="Top">
+                <Button AllowDrop="False" ClickMode="Release" Content="D →" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkGray" HorizontalAlignment="Left" IsEnabled="False" Margin="6,317,0,0" Name="btnDeSelectRight" ToolTip="DeSelect Right (Ctrl with Group)" UseLayoutRounding="False" Width="31" FontStyle="Normal" Click="btnDeSelectRight_Click" BorderBrush="{x:Null}" Height="21" VerticalAlignment="Top" />
+                <Button AllowDrop="False" Content="← D" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkGray" Height="21" HorizontalAlignment="Left" IsEnabled="False" Margin="6,268,0,0" Name="btnDeSelectLeft" ToolTip="DeSelect Left (Ctrl with Group)" UseLayoutRounding="False" VerticalAlignment="Top" Width="31" FontStyle="Normal" Click="btnDeSelectLeft_Click" BorderBrush="{x:Null}" />
+                <Button AllowDrop="False" Content="←D→" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkGray" Height="21" HorizontalAlignment="Left" IsEnabled="False" Margin="6,219,0,0" Name="btnDeSelectLine" ToolTip="DeSelect Current Line" UseLayoutRounding="False" VerticalAlignment="Top" Width="31" FontStyle="Normal" Click="btnDeSelectLine_Click" BorderBrush="{x:Null}" />
+                <Button AllowDrop="False" Content="D→↓" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkGray" Height="21" HorizontalAlignment="Left" IsEnabled="False" Margin="6,171,0,0" Name="btnDeSelectRightDown" ToolTip="DeSelect Right/Down (Ctrl with Group)" UseLayoutRounding="False" VerticalAlignment="Top" Width="31" FontStyle="Normal" Click="btnDeSelectRightDown_Click" BorderBrush="{x:Null}" />
+                <Button AllowDrop="False" Content="↑←D" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkGray" Height="21" HorizontalAlignment="Left" IsEnabled="False" Margin="6,123,0,0" Name="btnDeSelectLeftUp" ToolTip="DeSelect Left/Up (Ctrl with Group)" UseLayoutRounding="False" VerticalAlignment="Top" Width="31" FontStyle="Normal" Click="btnDeSelectLeftUp_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnAppend"  Width="31" Height="48" Margin="5,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" AllowDrop="False"
+                Click="btnAppend_Click"  ClipToBounds="False" Content="∑±" DataContext="{Binding}" Focusable="False" FontFamily="Courier New"
+                FontSize="12" FontWeight="Bold" Foreground="DarkBlue" IsEnabled="True"  ToolTip="Append file(s)...Or Add/Remove Multiple Selection /Group Operation ..." UseLayoutRounding="False" FontStyle="Normal" BorderBrush="{x:Null}" />
+                <Button Name="btnSelectRight"
+                Width="31"
+                Height="21"
+                Margin="6,295,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                ClickMode="Release"
+                Content="S →"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontWeight="Normal"
+                Foreground="DarkBlue"
+                IsEnabled="True"
+                ToolTip="Select Right (Ctrl with Group)"
+                UseLayoutRounding="False" FontStyle="Normal" Click="btnSelectRight_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnSelectLeft"
+                Width="31"
+                Height="21"
+                Margin="6,246,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                Content="← S"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontWeight="Normal"
+                Foreground="DarkBlue"
+                IsEnabled="True"
+                ToolTip="Select Left  (Ctrl with Group)"
+                UseLayoutRounding="False" FontStyle="Normal" Click="btnSelectLeft_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnSelectLine"
+                Width="31"
+                Height="21"
+                Margin="6,197,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                Content="←S→"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontWeight="Normal"
+                Foreground="DarkBlue"
+                IsEnabled="True"
+                ToolTip="Select Current Line"
+                UseLayoutRounding="False" FontStyle="Normal" Click="btnSelectLine_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnSelectAll"
+                Width="31"
+                Height="21"
+                Margin="6,55.093,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                ClickMode="Release"
+                Content="S↓↑"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontStyle="Normal"
+                FontWeight="Bold"
+                Foreground="DarkBlue"
+                IsEnabled="True"
+                ToolTip="Select All"
+                UseLayoutRounding="False" Click="btnSelectAll_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnSelectRightDown"
+                Width="31"
+                Height="21"
+                Margin="6,149,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                Content="S→↓"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontWeight="Normal"
+                Foreground="DarkBlue"
+                IsEnabled="True"
+                ToolTip="Select Right/Down (Ctrl with Group)"
+                UseLayoutRounding="False" FontStyle="Normal" Click="btnSelectRightDown_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnSelectLeftUp"
+                Width="31"
+                Height="21"
+                Margin="6,101.322,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                Content="↑←S"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontWeight="Normal"
+                Foreground="DarkBlue"
+                IsEnabled="True"
+                ToolTip="Select Left/Up (Ctrl with Group)"
+                UseLayoutRounding="False" FontStyle="Normal" Click="btnSelectLeftUp_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnRecDeSelect"
+                Width="31"
+                Height="21"
+                Margin="6,371.348,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                Content="▯D"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontWeight="Normal"
+                Foreground="DarkGray"
+                IsEnabled="False"
+                ToolTip="Rectangle DeSelect"
+                UseLayoutRounding="False" FontStyle="Normal" Click="btnRecDeSelect_Click" BorderBrush="{x:Null}" />
+                <Button Name="btnDeSelectAll"
+                Width="31"
+                Height="21"
+                Margin="6,76.322,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                Content="D↓↑"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontStyle="Normal"
+                FontWeight="Bold"
+                Foreground="DarkBlue"
+                IsEnabled="True"
+                ToolTip="DeSelect All"
+                UseLayoutRounding="False" Click="btnDeSelectAll_Click" BorderBrush="{x:Null}">
+                    <Button.ContextMenu>
+                        <ContextMenu />
+                    </Button.ContextMenu>
+                </Button>
+                <Button Name="btnPenDeSelect"
+                Width="31"
+                Height="21"
+                Margin="6,344,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AllowDrop="False"
+                Content="✑D"
+                DataContext="{Binding}"
+                Focusable="False"
+                FontFamily="Courier New"
+                FontSize="12"
+                FontWeight="Normal"
+                Foreground="DarkGray"
+                IsEnabled="False"
+                ToolTip="Pen DeSelect"
+                UseLayoutRounding="True" FontStyle="Normal" Click="btnPenDeSelect_Click" BorderBrush="{x:Null}" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="|S" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontStyle="Normal" FontWeight="Normal" Foreground="DarkGray" Height="21" IsEnabled="False" Name="btnPlaceHolder" ToolTip="Place Holder" UseLayoutRounding="False" Width="31" Click="btnPlaceHolder_Click" Margin="6,419.348,7,0" VerticalAlignment="Top" />
+                <Button Name="btnRecSelect" Width="31" Height="21" AllowDrop="False" Content="▮S" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkGray" IsEnabled="False" ToolTip="Rectangle Select" UseLayoutRounding="False" FontStyle="Normal" Click="btnRecSelect_Click" BorderBrush="{x:Null}" Margin="6,393.348,7,0" VerticalAlignment="Top" />
+                <Button AllowDrop="False" Focusable="False" FontFamily="Courier New" FontSize="10" FontWeight="Normal" Foreground="DarkBlue" HorizontalAlignment="Left" IsEnabled="True" Margin="6.909,615.211,0,0" Name="btnRemoveContinuouslySpace" ToolTip=" Replace All Continuously Spaces to One Space ... Selected Only ..." UseLayoutRounding="False" VerticalContentAlignment="Center" Visibility="Visible" Width="31" Content="ᴗᴗᴗ" FontStyle="Normal" Height="21" VerticalAlignment="Top" BorderBrush="{x:Null}" Click="btnRemoveDoubleSpace_Click" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" ClickMode="Release" Content="░" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontStyle="Normal" FontWeight="Normal" Foreground="DarkBlue" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="6,453.348,0,0" Name="btnHighlight" ToolTip="Highlight SQL  Reserved words." UseLayoutRounding="False" VerticalAlignment="Top" Width="30" Click="btnHighlight_Click" />
+                <CheckBox Height="16" Margin="4,488,0,0" Name="chkODBC" VerticalAlignment="Top" ToolTip="Add ODBC reserved words." AllowDrop="False" Checked="chkODBC_Checked" Unchecked="chkODBC_Unchecked" HorizontalAlignment="Left" Width="42" Content="ODBC" FontSize="9" Foreground="DarkBlue" />
+                <CheckBox AllowDrop="False" Height="16" HorizontalAlignment="Left" Margin="4,503,0,0" Name="chkFunction" ToolTip="Add Functions reserved words." VerticalAlignment="Top" Checked="chkFunction_Checked" Unchecked="chkFunction_Unchecked" Width="42" Content="f(x)" FontSize="9" Foreground="DarkBlue" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="→║←" Focusable="False" FontFamily="Courier New" FontSize="10" FontStyle="Normal" FontWeight="Normal" Foreground="DarkBlue" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="6,571.074,0,0" Name="btnCompress" ToolTip="Compress ALL in ONE line  (Opposite Split) ... Selected Only ...  " UseLayoutRounding="False" VerticalAlignment="Top" VerticalContentAlignment="Center" Visibility="Visible" Width="31" Click="btnCompress_Click" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="¯¦­­_" Focusable="False" FontFamily="Courier New" FontSize="10" FontStyle="Normal" FontWeight="Normal" Foreground="DarkBlue" HorizontalAlignment="Left" IsEnabled="True" Margin="6,593.211,0,0" Name="btnFormat" ToolTip="Preliminary Formatting SQL Clause ... Selected Only..." UseLayoutRounding="False" VerticalContentAlignment="Center" Visibility="Visible" Width="31" Click="btnFormat_Click" Height="21" VerticalAlignment="Top" />
+                <CheckBox AllowDrop="False" Height="16" HorizontalAlignment="Left" Margin="4,518,0,0" Name="chkApostrophe" VerticalAlignment="Top" Width="37" Content="''" FontSize="9" Foreground="DarkBlue" ToolTip="Highlight Apostrophe Content" Checked="chkApostrophe_Checked" Unchecked="chkApostrophe_Unchecked" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="←║→" Focusable="False" FontFamily="Courier New" FontSize="10" FontStyle="Normal" FontWeight="Normal" Foreground="DarkBlue" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="7,549,0,0" Name="btnSplit" ToolTip="Split BY First SQL Reserved Word  OR First Punctuation symbols..." UseLayoutRounding="False" VerticalAlignment="Top" VerticalContentAlignment="Center" Visibility="Visible" Width="31" Click="btnSplit_Click" />
+            </Grid>
+            <StatusBar FontFamily="Courier New" FontSize="11" Height="21" Margin="48,0,46,4" Name="statusSystem" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Foreground="DarkBlue" BorderThickness="0" BorderBrush="{x:Null}" Width="Auto" PreviewMouseLeftButtonDown="statusSystem_PreviewMouseLeftButtonDown">
+                <StatusBarItem Content="System" FontFamily="Courier New" FontSize="11" FontStyle="Normal" Height="21" HorizontalAlignment="Left" Name="statusSystemBar" ToolTip="program is using memory (in bytes) ..." BorderThickness="1" Foreground="DarkBlue" />
+                <StatusBarItem FontFamily="Courier New" FontSize="11" Height="21" Name="statusFile" />
+                <StatusBarItem FontFamily="Courier New" FontSize="11" Height="21" HorizontalAlignment="Left" Margin="10,0,0,0" Name="statusDocSizeBar" ToolTip="text size (in bytes) ..." />
+
+
+                <StatusBar.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                        <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                    </LinearGradientBrush>
+                </StatusBar.Background>
+
+
+            </StatusBar>
+            <ComboBox Name="comboDB" Width="303" Height="22" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" BorderBrush="#FFF1EDED" FontSize="12" FontWeight="Normal" IsEnabled="True" Foreground="DarkBlue" ForceCursor="True" AllowDrop="False" IsReadOnly="True" FontFamily="Courier New" BorderThickness="0" FlowDirection="LeftToRight" Margin="0,31,93,0"  Text="DataBase" ToolTip="Select DB ..," SelectionChanged="comboDB_SelectionChanged">
+
+                <ComboBox.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                        <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                    </LinearGradientBrush>
+                </ComboBox.Background>
+
+            </ComboBox>
+            <TextBox Name="txtConnectionString" Height="22" Margin="45,30,497,0" VerticalAlignment="Top" FontSize="12" ToolTip="Connection String" Text="Connection String" AllowDrop="False" FontFamily="Courier New" VerticalContentAlignment="Center" BorderBrush="{x:Null}" BorderThickness="1" IsEnabled="True" Foreground="DarkBlue" FontWeight="Normal" FontStyle="Italic" TextChanged="txtConnectionString_TextChanged"  />
+            <TextBox Height="22" Margin="313,4,299,0" Name="txtMemo" Text="Notes - Would be glad if you donate Friends ...." VerticalAlignment="Top" Cursor="Pen" FontWeight="Normal" Background="LightGray" ToolTip="Notes - Would be glad if you donate Friends ...." MaxLines="1" BorderBrush="{x:Null}" Foreground="DeepSkyBlue" MouseEnter="txtMemo_MouseEnter" MouseLeave="txtMemo_MouseLeave" FontSize="12" />
+            <Button BorderBrush="{x:Null}" BorderThickness="1" Content="Test DB" FontFamily="Courier New" FontSize="12" Foreground="DarkBlue" Height="22" HorizontalAlignment="Right" IsEnabled="True" Margin="0,31,401,0" Name="btnConnect" ToolTip="Test DB connection." VerticalAlignment="Top" Width="67" Click="btnConnect_Click" FontWeight="Normal" />
+            <Button Name="btnFindRightDown"  Width="97" Height="21" Margin="45,0,0,51" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Click="btnFindRightDown_Click" Content="Find    ► ▼" Focusable="False" FontSize="12" FontWeight="Normal" Foreground="DarkBlue"
+                ToolTip="Find NEXT Right/Down - from current page position..." FontFamily="Courier New" BorderBrush="{x:Null}" />
+            <Button Name="btnReplaceRightDown" Width="33" Height="21" Margin="109,0,0,29" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Content="► ▼" Focusable="False" FontSize="12" FontWeight="Normal" Foreground="DarkBlue"
+                ToolTip="Replace Right/Down - from current page position..." Click="btnReplaceRightDown_Click" FontFamily="Courier New" BorderBrush="{x:Null}" />
+
+
+
+            <CheckBox Height="16" HorizontalAlignment="Right" Margin="0,34,476,0" Name="chkBoxSame" VerticalAlignment="Top" ToolTip="Same Connection for ALL Tab" Checked="chkBoxSame_Checked" Unchecked="chkBoxSame_Unchecked" RenderTransformOrigin="-3.231,0.688" />
+            <ComboBox AllowDrop="False" BorderBrush="#FFF1EDED" BorderThickness="0" FlowDirection="LeftToRight" FontFamily="Courier New" FontSize="11" FontWeight="Normal" ForceCursor="True" Foreground="DarkBlue" Height="21" HorizontalAlignment="Right" HorizontalContentAlignment="Right" IsEnabled="True" IsReadOnly="True" Margin="0,0,44,51" Name="comboColor"  ToolTip="Selection Color ..," VerticalAlignment="Bottom" VerticalContentAlignment="Top" Width="150" ItemsSource="{Binding}" SelectionChanged="comboColor_SelectionChanged">
+                <ComboBox.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFDFDFD" Offset="0.203" />
+                        <GradientStop Color="#FFD5D5D5" Offset="0.843" />
+                    </LinearGradientBrush>
+                </ComboBox.Background>
+            </ComboBox>
+            <Grid HorizontalAlignment="Right" Name="gridButtonRight" Width="45" Margin="0,55,0,73">
+                <RadioButton BorderBrush="{x:Null}" Content="S7" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,191,6,0" Name="rbS7" ToolTip="TXT/SQL 7" VerticalAlignment="Top" Width="31" Checked="rbS7_Checked" Unchecked="rbS7_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S6" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,169,6,0" Name="rbS6" ToolTip="TXT/SQL 6" VerticalAlignment="Top" Width="31" Checked="rbS6_Checked" Unchecked="rbS6_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S5" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,147,6,0" Name="rbS5" ToolTip="TXT/SQL 5" VerticalAlignment="Top" Width="31" Checked="rbS5_Checked" Unchecked="rbS5_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S4" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,125,6,0" Name="rbS4" ToolTip="TXT/SQL 4" VerticalAlignment="Top" Width="31" Checked="rbS4_Checked" Unchecked="rbS4_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S3" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,103,6,0" Name="rbS3" ToolTip="TXT/SQL 3" VerticalAlignment="Top" Width="31" Checked="rbS3_Checked" Unchecked="rbS3_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S2" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,81,6,0" Name="rbS2" ToolTip="TXT/SQL 2" VerticalAlignment="Top" Width="31" Checked="rbS2_Checked" Unchecked="rbS2_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S1" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,59,6,0" Name="rbS1" ToolTip="TXT/SQL 1" VerticalAlignment="Top" Width="31" Checked="rbS1_Checked" Unchecked="rbS1_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S0" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" HorizontalAlignment="Right" IsChecked="True" Margin="0,37,6,0" Name="rbS0" ToolTip="TXT/SQL 0" Width="31" Checked="rbS0_Checked" Height="21" VerticalAlignment="Top" Unchecked="rbS0_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S9" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,235,6,0" Name="rbS9" ToolTip="TXT/SQL 9" VerticalAlignment="Top" Width="31" Checked="rbS9_Checked" Unchecked="rbS9_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="S8" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,213,6,0" Name="rbS8" ToolTip="TXT/SQL 8" VerticalAlignment="Top" Width="31" Checked="rbS8_Checked" Unchecked="rbS8_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="LOG" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,294,6,0" Name="rbLog" ToolTip="LOG ... (No Drop / No Group) " VerticalAlignment="Top" VerticalContentAlignment="Center" Width="31" Checked="rbLog_Checked" Unchecked="rbLog_Unchecked" />
+                <RadioButton BorderBrush="{x:Null}" Content="GCB" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,2,6,0" Name="rbCB" ToolTip="Group ClipBoard...(No Drop file/No Group Operation) " VerticalAlignment="Top" Width="31" Checked="rbCB_Checked" Unchecked="rbCB_Unchecked" />
+                <Button BorderBrush="{x:Null}" BorderThickness="1" Content="► ;" FontFamily="Courier New" FontSize="12" Foreground="Green" HorizontalAlignment="Right" IsEnabled="True" Margin="0,373,6,0" Name="btnRunCurrent" ToolTip="Run Current SQL / For divide command use &quot;;&quot;" Width="31" Click="btnRunCurrent_Click" Height="21" VerticalAlignment="Top" />
+                <Button BorderBrush="{x:Null}" BorderThickness="1" Content="►  " FontFamily="Courier New" FontSize="12" Foreground="Green" HorizontalAlignment="Right" IsEnabled="True" Margin="0,330,6,0" Name="btnRunAll" ToolTip="Run ALL SQL " Width="31" Click="btnRunAll_Click" Height="21" VerticalAlignment="Top" />
+                <Button BorderBrush="{x:Null}" BorderThickness="1" Content="► S" FontFamily="Courier New" FontSize="12" Foreground="Green" Height="21" HorizontalAlignment="Right" IsEnabled="True" Margin="0,351,6,0" Name="btnRunSelected" ToolTip="Run ALL Selected  SQL." VerticalAlignment="Top" Width="31" Click="btnRunSelected_Click" />
+                <Button BorderBrush="{x:Null}" BorderThickness="1" Content="►;S" FontFamily="Courier New" FontSize="12" Foreground="Green" HorizontalAlignment="Right" IsEnabled="True" Margin="0,397,6,0" Name="btnRunCurrentSelected" ToolTip="Run Current Selected SQL /For divide command use &quot;;&quot;" Width="31" Click="btnRunCurrentSelected_Click" Height="21" VerticalAlignment="Top" />
+                <RadioButton BorderBrush="{x:Null}" Content="SS" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" GroupName="SR" Height="21" HorizontalAlignment="Right" Margin="0,259,6,0" Name="rbSS" ToolTip="Selected Run SQL" VerticalAlignment="Top" Width="31" Checked="rbSS_Checked" Unchecked="rbSS_Unchecked" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="COPY" Focusable="False" FontFamily="Courier New" FontSize="9" FontStyle="Normal" FontWeight="Normal" Foreground="DeepSkyBlue" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="4,0,0,50.789" Name="btnCopy" ToolTip="Copy Selection to GCB - Group " UseLayoutRounding="False" VerticalAlignment="Bottom" VerticalContentAlignment="Top" Visibility="Visible" Width="38" Click="btnCopy_Click" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="DEL" Focusable="False" FontFamily="Courier New" FontSize="9" FontStyle="Normal" FontWeight="Normal" Foreground="DeepSkyBlue" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="4,0,0,71.789" Name="btnDelete" ToolTip="Delete Selection - Group " UseLayoutRounding="False" VerticalAlignment="Bottom" VerticalContentAlignment="Top" Visibility="Visible" Width="38" Click="btnDelete_Click" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="CUT" Focusable="False" FontFamily="Courier New" FontSize="9" FontStyle="Normal" FontWeight="Normal" Foreground="DeepSkyBlue" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="4,0,0,29.789" Name="btnCut" ToolTip="Cut Selection to GCB - Group " UseLayoutRounding="False" VerticalAlignment="Bottom" VerticalContentAlignment="Top" Visibility="Visible" Width="38" Click="btnCut_Click" />
+                <Button AllowDrop="False" BorderBrush="{x:Null}" Content="PASTE" Focusable="False" FontFamily="Courier New" FontSize="9" FontStyle="Normal" FontWeight="Normal" Foreground="DeepSkyBlue" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="4,0,0,7.789" Name="btnPaste" ToolTip="Paste from GCB - Group " UseLayoutRounding="False" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Visibility="Visible" Width="38" Click="btnPaste_Click" />
+            </Grid>
+            <Button AllowDrop="False" BorderBrush="{x:Null}" Content="☼☼" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontWeight="Normal" Foreground="DarkBlue" Height="48" HorizontalAlignment="Right" HorizontalContentAlignment="Center" IsEnabled="True" Margin="0,0,7,6" Name="btnClearEntireDoc" ToolTip="Clear All ..." VerticalAlignment="Bottom" Width="30" Click="btnClearEntireDoc_Click" />
+            <Button AllowDrop="False" BorderBrush="{x:Null}" ClipToBounds="False" Content="☼" DataContext="{Binding}" Focusable="False" FontFamily="Courier New" FontSize="12" FontStyle="Normal" FontWeight="Normal" Foreground="DarkBlue" Height="48" HorizontalAlignment="Right" IsEnabled="True" Margin="0,5.637,7,0" Name="btnClearCurrent" ToolTip="Clear Current Doc..." UseLayoutRounding="False" VerticalAlignment="Top" Width="31" Click="btnClearCurrent_Click" />
+        </Grid>
+        <Button AllowDrop="False" BorderBrush="{x:Null}" Content="♦" Focusable="False" FontFamily="Courier New" FontSize="13" FontStyle="Normal" FontWeight="Normal" Foreground="Red" Height="21" HorizontalAlignment="Left" IsEnabled="True" Margin="6,0,0,4" Name="btnAbort" ToolTip="Abort ANY process ..." UseLayoutRounding="False" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Visibility="Visible" Width="31" Click="btnAbort_Click" />
+
+        <ap:FastTextBox Margin="45,56,48,74" x:Name="ftb" AllowDrop="True" FontSize="10" FontWeight="Bold" Foreground="Black" PreviewMouseWheel="ftb_PreviewMouseWheel" Drop="ftb_Drop" Unloaded="Window_Unloaded" PreviewKeyUp="ftb_PreviewKeyUp" Background="#FFE5EBF1" PreviewMouseDoubleClick="ftb_PreviewMouseDoubleClick" PreviewMouseLeftButtonDown="ftb_PreviewMouseLeftButtonDown" MouseUp="ftb_MouseUp"></ap:FastTextBox>
+        <ap:userClock Margin="137,138,0,0" x:Name="userClk" VerticalAlignment="Top" HorizontalAlignment="Left" />
+    </Grid>
+</Window>
+
+
+<!--
+    <Label.RenderTransform>
+    <TransformGroup>
+    <ScaleTransform/>
+    <SkewTransform/>
+    <RotateTransform Angle="-90"/>
+    <TranslateTransform/>
+    </TransformGroup>
+    </Label.RenderTransform>
+-->

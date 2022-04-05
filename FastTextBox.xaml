@@ -1,0 +1,162 @@
+﻿<UserControl x:Class="AnotherEdit.FastTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             Name="mainFTB"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400" xmlns:my="clr-namespace:AnotherEdit">
+
+    <Grid Name="gridMain" Background="#FFF0F0F0">
+
+        <Canvas Name="canvasSelected"  Background="White" Canvas.Left="0" Canvas.Top="0"  Margin="0,0,17,17" RenderTransformOrigin="0.0,0.0" Focusable="False">
+            </Canvas>
+
+        <Canvas Name="canvasSelecting"  Background="Transparent" Canvas.Left="0" Canvas.Top="0"  Margin="0,0,17,17" RenderTransformOrigin="0.0,0.0" Focusable="False">
+        </Canvas>
+
+
+        <StackPanel Name="tbStackPanel">
+        </StackPanel>
+        
+ 
+        <Canvas Name="canvasMain"  Background="Transparent" Canvas.Left="0" Canvas.Top="0" RenderTransformOrigin="0.0,0.0" Focusable="False" LostFocus="tb_LostFocus" MouseDown="tb_MouseDown" MouseLeave="tb_MouseLeave" MouseMove="tb_MouseMove" MouseRightButtonDown="tb_PreviewMouseRightButtonDown" MouseRightButtonUp="tb_PreviewMouseRightButtonUp" MouseWheel="scrollV_MouseWheel" PreviewKeyDown="tb_PreviewKeyDown" PreviewMouseLeftButtonDown="tb_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="tb_PreviewMouseLeftButtonUp" PreviewMouseRightButtonDown="tb_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="tb_PreviewMouseRightButtonUp" SizeChanged="txtBlock_SizeChanged" Height="Auto">
+        </Canvas> 
+
+        <TextBlock Margin="0,0,17,0" Height="13" VerticalAlignment="Bottom" Text=" X " Name="tbX" TextAlignment="Center" Foreground="DeepSkyBlue" Canvas.Left="0" HorizontalAlignment="Center" Width="Auto" FontFamily="Courier New" FontSize="11" Background="{x:Null}" />
+        <TextBlock Name="tbY" TextAlignment="Center" Foreground="DeepSkyBlue" Text="Y" RenderTransformOrigin="1,0" Margin="0,191,14,197" FontSize="11" FontFamily="Courier New" HorizontalAlignment="Right" Width="Auto" Background="{x:Null}" Height="12" VerticalAlignment="Center">
+              <TextBlock.RenderTransform>
+                <TransformGroup>
+                   <RotateTransform Angle="-90" />
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+
+           <TextBlock Height="11" HorizontalAlignment="Right" Margin="0,0,40,2" Name="tbXY" Text="TextBlock" VerticalAlignment="Bottom" Width="85" FontFamily="Courier New" Foreground="DeepSkyBlue" FontSize="11" />
+
+        <ScrollBar Name="scrollY" Width="17" Orientation="Vertical" Margin="0,0,0,17" HorizontalAlignment="Right" Background="{x:Null}" BorderBrush="DarkGray" ValueChanged="scrollY_ValueChanged" MouseWheel="scrollV_MouseWheel" PreviewMouseLeftButtonDown="scrollY_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="scrollY_PreviewMouseLeftButtonUp" BorderThickness="0" />
+        <ScrollBar Name="scrollX" Height="17" Orientation="Horizontal" Margin="0,0,17,0" VerticalAlignment="Bottom" Background="{x:Null}" ValueChanged="scrollX_ValueChanged" BorderThickness="0" BorderBrush="DarkGray" MouseWheel="scrollH_MouseWheel" PreviewMouseLeftButtonDown="scrollX_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="scrollX_PreviewMouseLeftButtonUp" />
+
+
+
+
+        <TreeView Height="Auto" HorizontalAlignment="Left" Name="treeContext" VerticalAlignment="Top" Width="Auto" BorderThickness="1" BorderBrush="DimGray" Foreground="DimGray" Margin="0,0,0,0" FontFamily="Courier New" FontSize="11" Background="#FFF0F0F0">
+            <TreeViewItem FontFamily="Courier New" FontSize="13" Foreground="DimGray" Header="─────────────" Name="nameTriStart" IsSelected="False" IsEnabled="False" />
+            <TreeViewItem  Selected="selectedCopy" ClipToBounds="False" Header="Copy   Ctrl+C" FontFamily="Courier New" FontSize="13" ToolTip="Copy to clipboard from pointed selection  " Background="{x:Null}" Foreground="DarkBlue" Name="nameCopy" />
+            <TreeViewItem Selected="selectedCut"  Header="Cut    Ctrl+X" FontFamily="Courier New" FontSize="13" ToolTip="Cut to clipboard from pointed selection" Foreground="DarkBlue"  Name="nameCut" />
+            <TreeViewItem Selected="selectedPaste"  Header="Paste  Ctrl+V   " FontFamily="Courier New" FontSize="13" ToolTip="Paste from clipboard in pointed selection" Foreground="DarkBlue"  Name="namePaste" />
+            <TreeViewItem Selected="selectedDelete" FontFamily="Courier New" FontSize="13" Header="Delete Ctrl+D" ToolTip="Delete only pointed selection " Foreground="DarkBlue"   Name="nameDelete" />
+            <TreeViewItem Header="─────────────" IsEnabled="False"  FontFamily="Courier New" FontSize="13" Foreground="DimGray" FontWeight="Bold">
+            </TreeViewItem>
+            <TreeViewItem FontFamily="Courier New" FontSize="13" Header="Copy  to    ⁞" Foreground="DarkBlue"   Name="nameCopyTo" Selected="nameCopyTo_Selected" Expanded="nameCopyTo_Expanded" IsExpanded="False"  ToolTip="Copy from pointed selection to ...">
+                <TreeViewItem Header=" A " Name="CopyToA"  FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Copy To A" Selected="CopyToA_Selected" />
+                <TreeViewItem Header=" B " Name="CopyToB"  FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Copy To B" Selected="CopyToB_Selected" />
+                <TreeViewItem Header=" C " Name="CopyToC"  FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Copy To C" Selected="CopyToC_Selected" />
+                <TreeViewItem Header=" D " Name="CopyToD"  FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Copy To D" Selected="CopyToD_Selected" />
+                <TreeViewItem Header=" E " Name="CopyToE"  FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Copy To E" Selected="CopyToE_Selected" />
+            </TreeViewItem>
+            <TreeViewItem Header="Cut   to    ⁞" FontSize="13" FontFamily="Courier New" Foreground="DarkBlue"   Name="nameCutTo" Selected="nameCutTo_Selected" Expanded="nameCutTo_Expanded" ToolTip="Cut from pointed selection to ..." >
+                <TreeViewItem Header=" A " Name="CutToA" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Cut To A" Selected="CutToA_Selected" />
+                <TreeViewItem Header=" B " Name="CutToB" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Cut To B" Selected="CutToB_Selected" />
+                <TreeViewItem Header=" C " Name="CutToC" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Cut To C" Selected="CutToC_Selected" />
+                <TreeViewItem Header=" D " Name="CutToD" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Cut To D" Selected="CutToD_Selected" />
+                <TreeViewItem Header=" E " Name="CutToE" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Cut To E" Selected="CutToE_Selected" />
+            </TreeViewItem>
+            <TreeViewItem Header="Paste from  ⁞" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"   Name="namePasteFrom" Selected="namePasteFrom_Selected" Expanded="namePasteFrom_Expanded" ToolTip="Paste from ... to pointed selection.">
+                <TreeViewItem Header=" A " Name="PasteFromA" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Paste From A" Selected="PasteFromA_Selected" />
+                <TreeViewItem Header=" B " Name="PasteFromB" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Paste From B" Selected="PasteFromB_Selected" />
+                <TreeViewItem Header=" C " Name="PasteFromC" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Paste From C" Selected="PasteFromC_Selected" />
+                <TreeViewItem Header=" D " Name="PasteFromD" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Paste From D" Selected="PasteFromD_Selected" />
+                <TreeViewItem Header=" E " Name="PasteFromE" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" ToolTip="Paste From E" Selected="PasteFromE_Selected" />
+            </TreeViewItem>
+            <TreeViewItem Header="─────────────" IsEnabled="False" FontFamily="Courier New" FontSize="13" Foreground="DimGray" FontWeight="Bold">
+            </TreeViewItem>
+            <TreeViewItem Header="Clear ABCDE" Selected = "clear_ABCD" IsEnabled="True" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"  ToolTip="Clear ALL buffers A B C D E and Clipboard (Memory will be available for Garbage Collection  ..." />
+
+            <TreeViewItem Header="─────────────" IsEnabled="False" FontFamily="Courier New" FontSize="13" Foreground="DimGray" FontWeight="Bold">
+            </TreeViewItem>
+
+            <TreeViewItem Header="Comment" Selected = "Comment_Selected" IsEnabled="True" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"  ToolTip="Comment (from Current Selected to End line) Or All Line ..." />
+            <TreeViewItem Header="UnComment"  Selected = "UnComment_Selected" IsEnabled="True" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"  ToolTip="Uncomment Entire Line ..." />
+
+            <TreeViewItem Header="─────────────" IsEnabled="False" FontFamily="Courier New" FontSize="13" Foreground="DimGray" FontWeight="Bold">
+            </TreeViewItem>
+
+            <TreeViewItem Header="ToUpper" Selected = "upper_Selected" IsEnabled="True" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"   ToolTip="Comment (from Current Selected to End line) Or All Line ..." />
+            <TreeViewItem Header="ToLower"  Selected = "lower_Selected" IsEnabled="True" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"   ToolTip="Uncomment Entire Line ..." />
+
+            <TreeViewItem Header="─────────────" IsEnabled="False" FontFamily="Courier New" FontSize="13" Foreground="DimGray" FontWeight="Bold">
+            </TreeViewItem>
+
+            <TreeViewItem Header="SQL         ⁞" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"   IsSelected="False" IsTabStop="False" Name="nameSQL" Expanded="SQL_expanded"  ToolTip="SQL helper for current DB.">
+                <TreeViewItem Header="SELECT"   Name="nameSELECT"  FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"   Expanded="SELECT_expanded" >
+                    <TreeViewItem Header="main" Selected="SelectedSelectMain" Name="nameSELECTmain" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue"  />
+                    <TreeViewItem Header="full"  Selected="SelectedSelectFull" Name="nameSELECTfull" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue"  />
+                </TreeViewItem>
+                <TreeViewItem Header="DELETE" Name="nameDELETE"  FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"   Expanded="DELETE_expanded">
+                    <TreeViewItem Header="main"  Selected="SelectedDeleteMain" Name="nameDELETEmain" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" />
+                    <TreeViewItem Header="full"  Selected="SelectedDeleteFull" Name="nameDELETEfull"  FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" />
+                </TreeViewItem>
+                <TreeViewItem Header="UPDATE" Name="nameUPDATE"  FontFamily="Courier New" FontSize="13" Foreground="DarkBlue" FontWeight="Bold" Expanded="UPDATE_expanded">
+                    <TreeViewItem Header="main"  Selected="SelectedUpdateMain" Name="nameUPDATEmain" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue"/>
+                    <TreeViewItem Header="full"  Selected="SelectedUpdateFull" Name="nameUPDATEfull" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" />
+                </TreeViewItem>
+                <TreeViewItem Header="INSERT" Name="nameINSERT"  FontFamily="Courier New" FontSize="13" Foreground="DarkBlue" FontWeight="Bold" Expanded="INSERT_expanded" >
+                    <TreeViewItem Header="main"  Selected="SelectedInsertMain" Name="nameINSERTmain" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" />
+                    <TreeViewItem Header="full"  Selected="SelectedInsertFull" Name="nameINSERTfull" FontFamily="Courier New" FontSize="13" Foreground="DeepSkyBlue" />
+                </TreeViewItem>
+                
+            </TreeViewItem>
+ 
+            <TreeViewItem Header="─────────────" IsEnabled="False"  FontFamily="Courier New" FontSize="13" Foreground="DimGray" FontWeight="Bold">
+            </TreeViewItem>
+
+
+            <TreeView.RenderTransform>
+                <TranslateTransform x:Name="tr"/>
+            </TreeView.RenderTransform>
+        </TreeView>
+
+        <ListBox Name="listBoxHelper" Background="#FFF0F0F0" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="50" MinHeight="10"  Canvas.Left="1"   Foreground="DarkBlue"   ForceCursor="True" MouseDoubleClick="listBoxHelper_MouseDoubleClick" PreviewKeyDown="listBoxHelper_PreviewKeyDown">
+
+            <ListBox.RenderTransform>
+                <TranslateTransform x:Name="trList" />
+            </ListBox.RenderTransform>
+
+            <ListBox.Resources>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <SolidColorBrush Color="LightGray" x:Key="{x:Static SystemColors.HighlightBrushKey}"/>
+            </ListBox.Resources>
+
+
+        </ListBox>
+
+    </Grid>
+    
+    
+
+</UserControl>
+
+
+<!--<TreeView.Background>
+    <RadialGradientBrush>
+        <GradientStop Color="#F0C8C8C8" Offset="0" />
+        <GradientStop Color="#E4F0F1F0" Offset="0.994" />
+    </RadialGradientBrush>
+</TreeView.Background>
+    
+            <TreeView.Resources>
+                <SolidColorBrush Color="LightSteelBlue" x:Key="{x:Static SystemColors.HighlightBrushKey}"/>
+            </TreeView.Resources>    
+                <ListBox.Resources>
+                <SolidColorBrush Color="Blue" x:Key="{x:Static SystemColors.HighlightBrushKey}"/>
+            </ListBox.Resources>
+    
+           <TreeViewItem Header="Tables      ⁞" FontFamily="Courier New" FontSize="13" Foreground="DarkBlue"  Name="nameTables" ToolTip="Tables from current connection."/>    
+    -->
